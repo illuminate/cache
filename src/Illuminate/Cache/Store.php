@@ -81,6 +81,20 @@ abstract class Store implements ArrayAccess {
 	}
 
 	/**
+	 * Store an item in the cache indefinitely.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	public function forever($key, $value)
+	{
+		$this->items[$key] = $value;
+
+		return $this->storeItemForever($key, $value);
+	}
+
+	/**
 	 * Get an item from the cache, or store the default value.
 	 *
 	 * @param  string   $key
@@ -114,6 +128,15 @@ abstract class Store implements ArrayAccess {
 	abstract protected function storeItem($key, $value, $minutes);
 
 	/**
+	 * Store an item in the cache indefinitely.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	abstract protected function storeItemForever($key, $value);
+
+	/**
 	 * Remove an item from the cache.
 	 *
 	 * @param  string  $key
@@ -133,6 +156,25 @@ abstract class Store implements ArrayAccess {
 	 * @return void
 	 */
 	abstract protected function removeItem($key);
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	public function flush()
+	{
+		$this->items = array();
+
+		return $this->flushItems();
+	}
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	abstract protected function flushItems();
 
 	/**
 	 * Get the default cache time.
@@ -164,6 +206,16 @@ abstract class Store implements ArrayAccess {
 	public function existsInMemory($key)
 	{
 		return array_key_exists($key, $this->items);
+	}
+
+	/**
+	 * Get all of the values in memory.
+	 *
+	 * @return array
+	 */
+	public function getMemory()
+	{
+		return $this->items;
 	}
 
 	/**

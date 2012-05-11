@@ -105,9 +105,42 @@ class StoreTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	public function testForeverMethodStoresItemInMemory()
+	{
+		$store = $this->getMockStore();
+		$store->forever('foo', 'bar');
+		$this->assertEquals('bar', $store->getFromMemory('foo'));
+	}
+
+
+	public function testForeverMethodCallsDriver()
+	{
+		$store = $this->getMockStore();
+		$store->expects($this->once())->method('storeItemForever')->with($this->equalTo('foo'), $this->equalTo('bar'));
+		$store->forever('foo', 'bar');
+	}
+
+
+	public function testFlushClearsMemoryItems()
+	{
+		$store = $this->getMockStore();
+		$store->setInMemory('foo', 'bar');
+		$store->flush();
+		$this->assertEquals(array(), $store->getMemory());
+	}
+
+
+	public function testFlushCallsDriver()
+	{
+		$store = $this->getMockStore();
+		$store->expects($this->once())->method('flushItems');
+		$store->flush();
+	}
+
+
 	protected function getMockStore()
 	{
-		return $this->getMock('Illuminate\Cache\Store', array('retrieveItem', 'storeItem', 'removeItem'));
+		return $this->getMock('Illuminate\Cache\Store', array('retrieveItem', 'storeItem', 'storeItemForever', 'removeItem', 'flushItems'));
 	}
 
 }

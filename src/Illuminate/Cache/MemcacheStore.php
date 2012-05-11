@@ -59,6 +59,18 @@ class MemcacheStore extends Store {
 	}
 
 	/**
+	 * Store an item in the cache indefinitely.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	protected function storeItemForever($key, $value)
+	{
+		return $this->storeItem($key, $value, 0);
+	}
+
+	/**
 	 * Remove an item from the cache.
 	 *
 	 * @param  string  $key
@@ -67,6 +79,16 @@ class MemcacheStore extends Store {
 	protected function removeItem($key)
 	{
 		$this->memcache->delete($this->prefix.$key);
+	}
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	protected function flushItems()
+	{
+		$this->memcache->flush();
 	}
 
 }
