@@ -17,6 +17,48 @@ abstract class Store implements ArrayAccess {
 	protected $default = 60;
 
 	/**
+	 * Retrieve an item from the cache by key.
+	 *
+	 * @param  string  $key
+	 * @return mixed
+	 */
+	abstract protected function retrieveItem($key);
+
+	/**
+	 * Store an item in the cache for a given number of minutes.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @param  int     $minutes
+	 * @return void
+	 */
+	abstract protected function storeItem($key, $value, $minutes);
+
+	/**
+	 * Store an item in the cache indefinitely.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	abstract protected function storeItemForever($key, $value);
+
+	/**
+	 * Remove an item from the cache.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	abstract protected function removeItem($key);
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	abstract protected function flushItems();
+
+	/**
 	 * Determine if an item exists in the cache.
 	 *
 	 * @param  string  $key
@@ -56,14 +98,6 @@ abstract class Store implements ArrayAccess {
 
 		return $this->items[$key] = $value;
 	}
-
-	/**
-	 * Retrieve an item from the cache by key.
-	 *
-	 * @param  string  $key
-	 * @return mixed
-	 */
-	abstract protected function retrieveItem($key);
 
 	/**
 	 * Store an item in the cache for a given number of minutes.
@@ -140,25 +174,6 @@ abstract class Store implements ArrayAccess {
 	}
 
 	/**
-	 * Store an item in the cache for a given number of minutes.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @param  int     $minutes
-	 * @return void
-	 */
-	abstract protected function storeItem($key, $value, $minutes);
-
-	/**
-	 * Store an item in the cache indefinitely.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	abstract protected function storeItemForever($key, $value);
-
-	/**
 	 * Remove an item from the cache.
 	 *
 	 * @param  string  $key
@@ -172,14 +187,6 @@ abstract class Store implements ArrayAccess {
 	}
 
 	/**
-	 * Remove an item from the cache.
-	 *
-	 * @param  string  $key
-	 * @return void
-	 */
-	abstract protected function removeItem($key);
-
-	/**
 	 * Remove all items from the cache.
 	 *
 	 * @return void
@@ -190,13 +197,6 @@ abstract class Store implements ArrayAccess {
 
 		return $this->flushItems();
 	}
-
-	/**
-	 * Remove all items from the cache.
-	 *
-	 * @return void
-	 */
-	abstract protected function flushItems();
 
 	/**
 	 * Get the default cache time.
