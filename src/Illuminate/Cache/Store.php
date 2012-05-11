@@ -118,6 +118,28 @@ abstract class Store implements ArrayAccess {
 	}
 
 	/**
+	 * Get an item from the cache, or store the default value forever.
+	 *
+	 * @param  string   $key
+	 * @param  Closure  $callback
+	 * @return 
+	 */
+	public function rememberForever($key, Closure $callback)
+	{
+		// If the item exists in the cache, we will just return it immediately,
+		// otherwise we will execute the given Closure and cache the result
+		// of that execution for the given number of minutes. It's easy.
+		if ($this->has($key))
+		{
+			return $this->get($key);
+		}
+
+		$this->forever($key, $value = $callback());
+
+		return $value;	
+	}
+
+	/**
 	 * Store an item in the cache for a given number of minutes.
 	 *
 	 * @param  string  $key
