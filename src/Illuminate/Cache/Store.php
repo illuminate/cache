@@ -63,7 +63,7 @@ abstract class Store implements ArrayAccess {
 	 * @param  string  $key
 	 * @return mixed
 	 */
-	abstract function retrieveItem($key);
+	abstract protected function retrieveItem($key);
 
 	/**
 	 * Store an item in the cache for a given number of minutes.
@@ -111,7 +111,7 @@ abstract class Store implements ArrayAccess {
 	 * @param  int     $minutes
 	 * @return void
 	 */
-	abstract function storeItem($key, $minutes);
+	abstract protected function storeItem($key, $value, $minutes);
 
 	/**
 	 * Remove an item from the cache.
@@ -132,7 +132,7 @@ abstract class Store implements ArrayAccess {
 	 * @param  string  $key
 	 * @return void
 	 */
-	abstract function removeItem($key);
+	abstract protected function removeItem($key);
 
 	/**
 	 * Get the default cache time.
