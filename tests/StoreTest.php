@@ -88,6 +88,23 @@ class StoreTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	public function testRememberMethodReturnsItemsThatExist()
+	{
+		$store = $this->getMockStore();
+		$store->setInMemory('foo', 'bar');
+		$this->assertEquals('bar', $store->remember('foo', 30, function() { return 'boom'; }));
+	}
+
+
+	public function testRememberMethodCallsPutAndReturnsDefault()
+	{
+		$store = $this->getMockStore();
+		$store->expects($this->once())->method('storeItem')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(10));
+		$result = $store->remember('foo', 10, function() { return 'bar'; });
+		$this->assertEquals('bar', $result);
+	}
+
+
 	protected function getMockStore()
 	{
 		return $this->getMock('Illuminate\Cache\Store', array('retrieveItem', 'storeItem', 'removeItem'));

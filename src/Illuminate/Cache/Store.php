@@ -36,6 +36,9 @@ abstract class Store implements ArrayAccess {
 	 */
 	public function get($key, $default = null)
 	{
+		// The store keeps all already accessed items in memory so they don't need
+		// to be retrieved again on subsequent calls to the caches. This is to
+		// help increase the speed of the application and not waste trips.
 		if (array_key_exists($key, $this->items))
 		{
 			return $this->items[$key];
@@ -43,6 +46,9 @@ abstract class Store implements ArrayAccess {
 
 		$value = $this->retrieveItem($key);
 
+		// If the items are not present in the caches, we will return the default
+		// value that was supplied. If it was a Closure we will execute it so
+		// the execution of intensive operations will be lazily executed.
 		if (is_null($value))
 		{
 			return ($default instanceof Closure) ? $default() : $default;
@@ -72,6 +78,29 @@ abstract class Store implements ArrayAccess {
 		$this->items[$key] = $value;
 
 		return $this->storeItem($key, $value, $minutes);
+	}
+
+	/**
+	 * Get an item from the cache, or store the default value.
+	 *
+	 * @param  string   $key
+	 * @param  int      $minutes
+	 * @param  Closure  $callback
+	 * @return 
+	 */
+	public function remember($key, $minutes, Closure $callback)
+	{
+		// If the item exists in the cache, we will just return it immediately,
+		// otherwise we will execute the given Closure and cache the result
+		// of that execution for the given number of minutes. It's easy.
+		if ($this->has($key))
+		{
+			return $this->get($key);
+		}
+
+		$this->put($key, $value = $callback(), $minutes);
+
+		return $value;
 	}
 
 	/**
