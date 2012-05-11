@@ -29,6 +29,15 @@ class MemcacheStoreTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	public function testStoreItemForeverProperlyCallsMemcached()
+	{
+		$memcache = $this->getMock('Memcache', array('set'));
+		$memcache->expects($this->once())->method('set')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(0), $this->equalTo(0));
+		$store = new Illuminate\Cache\MemcacheStore($memcache);
+		$store->forever('foo', 'bar');
+	}
+
+
 	public function testForgetMethodProperlyCallsMemcache()
 	{
 		$memcache = $this->getMock('Memcache', array('delete'));
