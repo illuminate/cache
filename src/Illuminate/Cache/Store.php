@@ -1,6 +1,6 @@
-<?php namespace Illuminate\Cache; use Closure;
+<?php namespace Illuminate\Cache; use Closure, ArrayAccess;
 
-abstract class Store {
+abstract class Store implements ArrayAccess {
 
 	/**
 	 * The items retrieved from the cache.
@@ -8,6 +8,24 @@ abstract class Store {
 	 * @var array
 	 */
 	protected $items = array();
+
+	/**
+	 * The default number of minutes to store items.
+	 *
+	 * @var int
+	 */
+	protected $default = 60;
+
+	/**
+	 * Determine if an item exists in the cache.
+	 *
+	 * @param  string  $key
+	 * @return bool
+	 */
+	public function has($key)
+	{
+		return ! is_null($this->get($key));
+	}
 
 	/**
 	 * Retrieve an item from the cache by key.
@@ -76,7 +94,7 @@ abstract class Store {
 	{
 		unset($this->items[$key]);
 
-		return $this->forgetItem($key);
+		return $this->removeItem($key);
 	}
 
 	/**
@@ -85,7 +103,39 @@ abstract class Store {
 	 * @param  string  $key
 	 * @return void
 	 */
-	abstract function forgetItem($key);
+	abstract function removeItem($key);
+
+	/**
+	 * Get the default cache time.
+	 *
+	 * @return int
+	 */
+	public function getDefaultCacheTime()
+	{
+		return $this->default;
+	}
+
+	/**
+	 * Set the default cache time in minutes.
+	 *
+	 * @param  int   $minutes
+	 * @return void
+	 */
+	public function setDefaultCacheTime($minutes)
+	{
+		$this->default = $minutes;
+	}
+
+	/**
+	 * Determine if an item is in memory.
+	 *
+	 * @param  string  $key
+	 * @return bool
+	 */
+	public function existsInMemory($key)
+	{
+		return array_key_exists($key, $this->items);
+	}
 
 	/**
 	 * Get the value of an item in memory.
@@ -108,6 +158,51 @@ abstract class Store {
 	public function setInMemory($key, $value)
 	{
 		$this->items[$key] = $value;
+	}
+
+	/**
+	 * Determine if a cached value exists.
+	 *
+	 * @param  string  $key
+	 * @return bool
+	 */
+	public function offsetExists($key)
+	{
+		return $this->has($key);
+	}
+
+	/**
+	 * Retrieve an item from the cache by key.
+	 *
+	 * @param  string  $key
+	 * @return mixed
+	 */
+	public function offsetGet($key)
+	{
+		return $this->get($key);
+	}
+
+	/**
+	 * Store an item in the cache for the default time.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	public function offsetSet($key, $value)
+	{
+		$this->put($key, $value, $this->default);
+	}
+
+	/**
+	 * Remove an item from the cache.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public function offsetUnset($key)
+	{
+		return $this->forget($key);
 	}
 
 }
