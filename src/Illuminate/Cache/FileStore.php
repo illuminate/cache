@@ -1,0 +1,122 @@
+<?php namespace Illuminate\Cache;
+
+class FileStore extends Store {
+
+	/**
+	 * The file cache directory
+	 *
+	 * @var string
+	 */
+	protected $directory;
+
+	/**
+	 * Create a new file cache store instance.
+	 *
+	 * @param  string  $directory
+	 * @return void
+	 */
+	public function __construct($directory)
+	{
+		$this->directory = $directory;
+	}
+
+	/**
+	 * Retrieve an item from the cache by key.
+	 *
+	 * @param  string  $key
+	 * @return mixed
+	 */
+	protected function retrieveItem($key)
+	{
+		$path = $this->path($key);
+
+		if ( ! $this->files->exists($path))
+		{
+			return null;
+		}
+
+		$contents = $this->files->get($path);
+
+		$expiration = substr($contents, 0, 10);
+
+		if (time() >= $expiration)
+		{
+			return $this->removeItem($key);
+		}
+
+		return substr($contents, 10);
+	}
+
+	/**
+	 * Store an item in the cache for a given number of minutes.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @param  int     $minutes
+	 * @return void
+	 */
+	protected function storeItem($key, $value, $minutes)
+	{
+		$value = $this->expiration($minutes).serialize($value);
+
+		$this->files->put($this->path($key), $value);
+	}
+
+	/**
+	 * Store an item in the cache indefinitely.
+	 *
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	protected function storeItemForever($key, $value)
+	{
+		return $this->storeItem($key, $value, 0);
+	}
+
+	/**
+	 * Remove an item from the cache.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	protected function removeItem($key)
+	{
+		$this->files->delete($this->path($key));
+	}
+
+	/**
+	 * Remove all items from the cache.
+	 *
+	 * @return void
+	 */
+	protected function flushItems()
+	{
+		$this->files->clearDirectory($this->directory);
+	}
+
+	/**
+	 * Get the full path for the given cache key.
+	 *
+	 * @param  string  $key
+	 * @return string
+	 */
+	protected function path($key)
+	{
+		return $this->directory.$key;
+	}
+
+	/**
+	 * Get the expiration time based on the given minutes.
+	 *
+	 * @param  int  $minutes
+	 * @return int
+	 */
+	protected function expiration($minutes)
+	{
+		if ($minutes === 0) return 9999999999;
+
+		return time() + ($minutes * 60);
+	}
+
+}
