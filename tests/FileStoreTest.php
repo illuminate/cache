@@ -49,6 +49,34 @@ class FileStoreTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	public function testForeversAreStoredWithHighTimestamp()
+	{
+		$files = $this->mockFilesystem();
+		$contents = '9999999999'.serialize('Hello World');
+		$files->expects($this->once())->method('put')->with($this->equalTo(__DIR__.'/foo'), $this->equalTo($contents));
+		$store = new FileStore($files, __DIR__);
+		$store->forever('foo', 'Hello World', 10);
+	}
+
+
+	public function testRemoveDeletesFile()
+	{
+		$files = $this->mockFilesystem();
+		$files->expects($this->once())->method('delete')->with($this->equalTo(__DIR__.'/foo'));
+		$store = new FileStore($files, __DIR__);
+		$store->forget('foo');
+	}
+
+
+	public function testFlushCleansDirectory()
+	{
+		$files = $this->mockFilesystem();
+		$files->expects($this->once())->method('cleanDirectory')->with($this->equalTo(__DIR__));
+		$store = new FileStore($files, __DIR__);
+		$store->flush();
+	}
+
+
 	protected function mockFilesystem()
 	{
 		return $this->getMock('Illuminate\Filesystem');
