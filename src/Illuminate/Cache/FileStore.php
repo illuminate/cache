@@ -1,6 +1,13 @@
-<?php namespace Illuminate\Cache;
+<?php namespace Illuminate\Cache; use Illuminate\Filesystem\Filesystem;
 
 class FileStore extends Store {
+
+	/**
+	 * The Illuminate Filesystem instance.
+	 *
+	 * @var Illuminate\Filesystem\Filesystem
+	 */
+	protected $files;
 
 	/**
 	 * The file cache directory
@@ -12,11 +19,13 @@ class FileStore extends Store {
 	/**
 	 * Create a new file cache store instance.
 	 *
-	 * @param  string  $directory
+	 * @param  Illuminate\Filesystem\Filesystem  $files
+	 * @param  string                            $directory
 	 * @return void
 	 */
-	public function __construct($directory)
+	public function __construct(Filesystem $files, $directory)
 	{
+		$this->files = $files;
 		$this->directory = $directory;
 	}
 
@@ -30,6 +39,9 @@ class FileStore extends Store {
 	{
 		$path = $this->path($key);
 
+		// If the file doesn't exists, we obviously can't return the cache so
+		// we'll just return null. Otherwise, we will get the contents of
+		// the file and extract the expiration UNIX timestamp from it.
 		if ( ! $this->files->exists($path))
 		{
 			return null;
@@ -39,6 +51,9 @@ class FileStore extends Store {
 
 		$expiration = substr($contents, 0, 10);
 
+		// If the current time is greater than expiration timestamp, we will
+		// delete the file and return null, this helps clean up the old
+		// cache files and keeps the directory much cleaner for us.
 		if (time() >= $expiration)
 		{
 			return $this->removeItem($key);
