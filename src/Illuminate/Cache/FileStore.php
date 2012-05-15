@@ -107,7 +107,7 @@ class FileStore extends Store {
 	 */
 	protected function flushItems()
 	{
-		$this->files->clearDirectory($this->directory);
+		$this->files->cleanDirectory($this->directory);
 	}
 
 	/**
