@@ -134,4 +134,24 @@ class FileStore extends Store {
 		return time() + ($minutes * 60);
 	}
 
+	/**
+	 * Get the Filesystem instance.
+	 *
+	 * @var Illuminate\Filesystem
+	 */
+	public function getFilesystem()
+	{
+		return $this->files;
+	}
+
+	/**
+	 * Get the working directory of the cache.
+	 *
+	 * @return string
+	 */
+	public function getDirectory()
+	{
+		return $this->directory;
+	}
+
 }
