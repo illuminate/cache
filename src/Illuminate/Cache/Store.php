@@ -90,7 +90,7 @@ abstract class Store implements ArrayAccess {
 
 		// If the items are not present in the caches, we will return the default
 		// value that was supplied. If it was a Closure we will execute it so
-		// the execution of intensive operations will be lazily executed.
+		// the execution of intensive operations will get lazily executed.
 		if (is_null($value))
 		{
 			return ($default instanceof Closure) ? $default() : $default;
@@ -140,7 +140,7 @@ abstract class Store implements ArrayAccess {
 	{
 		// If the item exists in the cache, we will just return it immediately,
 		// otherwise we will execute the given Closure and cache the result
-		// of that execution for the given number of minutes. It's easy.
+		// of that execution for the given number of minutes in storage.
 		if ($this->has($key))
 		{
 			return $this->get($key);

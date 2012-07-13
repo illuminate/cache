@@ -51,9 +51,9 @@ class FileStore extends Store {
 
 		$expiration = substr($contents, 0, 10);
 
-		// If the current time is greater than expiration timestamp, we will
+		// If the current time is greater than expiration timestamp we will
 		// delete the file and return null, this helps clean up the old
-		// cache files and keeps the directory much cleaner for us.
+		// cache files and keeps this directory much cleaner for us.
 		if (time() >= $expiration)
 		{
 			return $this->removeItem($key);
