@@ -12,6 +12,9 @@
         "illuminate/filesystem": ">=1.0.0",
         "illuminate/support": ">=1.0.0"
     },
+    "require-dev": {
+        "mockery/mockery": "0.7.2"
+    },
     "autoload": {
         "psr-0": {"Illuminate\\Cache": "src/"}
     },
