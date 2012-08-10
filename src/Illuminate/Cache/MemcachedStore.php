@@ -91,4 +91,14 @@ class MemcachedStore extends Store {
 		$this->memcached->flush();
 	}
 
+	/**
+	 * Get the underlying Memcached connection.
+	 *
+	 * @return Memcached
+	 */
+	public function getMemcached()
+	{
+		return $this->memcached;
+	}
+
 }

@@ -39,9 +39,9 @@ class FileStore extends Store {
 	{
 		$path = $this->path($key);
 
-		// If the file doesn't exists, we obviously can't return the cache so
-		// we'll just return null. Otherwise, we will get the contents of
-		// the file and extract the expiration UNIX timestamp from it.
+		// If the file doesn't exists, we obviously can't return the cache so we will
+		// just return null. Otherwise, we'll get the contents of the file and get
+		// the expiration UNIX timestamps from the start of the file's contents.
 		if ( ! $this->files->exists($path))
 		{
 			return null;
@@ -51,9 +51,9 @@ class FileStore extends Store {
 
 		$expiration = substr($contents, 0, 10);
 
-		// If the current time is greater than expiration timestamp we will
-		// delete the file and return null, this helps clean up the old
-		// cache files and keeps this directory much cleaner for us.
+		// If the current time is greater than expiration timestamps we will delete
+		// the file and return null. This helps clean up the old files and keeps
+		// this directory much cleaner for us as old files aren't hanging out.
 		if (time() >= $expiration)
 		{
 			return $this->removeItem($key);
