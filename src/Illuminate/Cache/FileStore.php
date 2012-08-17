@@ -59,7 +59,7 @@ class FileStore extends Store {
 			return $this->removeItem($key);
 		}
 
-		return substr($contents, 10);
+		return unserialize(substr($contents, 10));
 	}
 
 	/**

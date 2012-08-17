@@ -31,7 +31,7 @@ class FileStoreTest extends PHPUnit_Framework_TestCase {
 	{
 		$files = $this->mockFilesystem();
 		$files->expects($this->once())->method('exists')->will($this->returnValue(true));
-		$contents = '9999999999Hello World';
+		$contents = '9999999999'.serialize('Hello World');
 		$files->expects($this->once())->method('get')->will($this->returnValue($contents));
 		$store = new FileStore($files, __DIR__);
 		$this->assertEquals('Hello World', $store->get('foo'));
