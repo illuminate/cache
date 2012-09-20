@@ -93,4 +93,14 @@ class RedisStore extends Store {
 		$this->redis->flushdb();
 	}
 
+	/**
+	 * Get the Redis database instance.
+	 *
+	 * @return Illuminate\Redis\Database
+	 */
+	public function getRedis()
+	{
+		return $this->redis;
+	}
+
 }
