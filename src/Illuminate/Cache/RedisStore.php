@@ -39,7 +39,7 @@ class RedisStore extends Store {
 	 */
 	protected function retrieveItem($key)
 	{
-		if ( ! is_null($value = $this->redis->get($key)))
+		if ( ! is_null($value = $this->redis->get($this->prefix.$key)))
 		{
 			return unserialize($value);
 		}
@@ -55,9 +55,9 @@ class RedisStore extends Store {
 	 */
 	protected function storeItem($key, $value, $minutes)
 	{
-		$this->redis->set($key, serialize($value));
+		$this->redis->set($this->prefix.$key, serialize($value));
 
-		$this->redis->expire($key, $minutes * 60);
+		$this->redis->expire($this->prefix.$key, $minutes * 60);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class RedisStore extends Store {
 	 */
 	protected function storeItemForever($key, $value)
 	{
-		$this->redis->set($key, serialize($value));
+		$this->redis->set($this->prefix.$key, serialize($value));
 	}
 
 	/**
@@ -80,7 +80,7 @@ class RedisStore extends Store {
 	 */
 	protected function removeItem($key)
 	{
-		$this->redis->del($key);
+		$this->redis->del($this->prefix.$key);
 	}
 
 	/**
