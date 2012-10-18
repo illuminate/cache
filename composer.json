@@ -9,6 +9,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
+        "illuminate/database": ">=1.0.0",
+        "illuminate/encryption": ">=1.0.0",
         "illuminate/filesystem": ">=1.0.0",
         "illuminate/redis": ">=1.0.0",
         "illuminate/support": ">=1.0.0"
