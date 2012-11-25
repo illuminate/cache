@@ -7,17 +7,16 @@ class CacheServiceProvider extends ServiceProvider {
 	/**
 	 * Register the service provider.
 	 *
-	 * @param  Illuminate\Foundation\Application  $app
 	 * @return void
 	 */
-	public function register($app)
+	public function register()
 	{
-		$app['cache'] = $app->share(function($app)
+		$this->app['cache'] = $this->app->share(function($app)
 		{
 			return new CacheManager($app);
 		});
 
-		$app['memcached.connector'] = $app->share(function()
+		$this->app['memcached.connector'] = $this->app->share(function()
 		{
 			return new MemcachedConnector;
 		});
