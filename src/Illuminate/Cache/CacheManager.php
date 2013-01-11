@@ -105,4 +105,14 @@ class CacheManager extends Manager {
 		return $this->app['config']['cache.driver'];
 	}
 
+	/**
+	 * Create an instance of the Wincache cache driver.
+	 *
+	 * @return Illuminate\Cache\WincacheStore
+	 */
+	protected function createWincacheDriver()
+	{
+		return new WincacheStore(new WincacheWrapper);
+	}
+
 }
