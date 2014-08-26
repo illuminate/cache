@@ -3,14 +3,14 @@
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
-class FailedTableCommand extends Command {
+class CacheTableCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'cache:cache-table';
+	protected $name = 'cache:table';
 
 	/**
 	 * The console command description.
@@ -51,6 +51,8 @@ class FailedTableCommand extends Command {
 		$this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/cache.stub'));
 
 		$this->info('Migration created successfully!');
+
+        $this->call('dump-autoload');
 	}
 
 	/**
