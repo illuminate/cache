@@ -75,7 +75,7 @@ class RedisStore extends TaggableStore implements Store
         $values = $this->connection()->mget($prefixedKeys);
 
         foreach ($values as $index => $value) {
-            $return[$keys[$index]] = is_numeric($value) ? $value : unserialize($value);
+            $return[$keys[$index]] = is_numeric($value) ? $value : \unserialize($value);
         }
 
         return $return;
@@ -91,7 +91,7 @@ class RedisStore extends TaggableStore implements Store
      */
     public function put($key, $value, $minutes)
     {
-        $value = is_numeric($value) ? $value : serialize($value);
+        $value = is_numeric($value) ? $value : \serialize($value);
 
         $this->connection()->setex($this->prefix.$key, (int) max(1, $minutes * 60), $value);
     }
@@ -147,7 +147,7 @@ class RedisStore extends TaggableStore implements Store
      */
     public function forever($key, $value)
     {
-        $value = is_numeric($value) ? $value : serialize($value);
+        $value = is_numeric($value) ? $value : \serialize($value);
 
         $this->connection()->set($this->prefix.$key, $value);
     }
