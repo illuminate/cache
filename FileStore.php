@@ -75,7 +75,7 @@ class FileStore implements Store
             return ['data' => null, 'time' => null];
         }
 
-        $data = unserialize(substr($contents, 10));
+        $data = \unserialize(substr($contents, 10));
 
         // Next, we'll extract the number of minutes that are remaining for a cache
         // so that we can properly retain the time for things like the increment
