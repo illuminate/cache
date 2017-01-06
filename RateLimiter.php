@@ -109,6 +109,9 @@ class RateLimiter
     public function retriesLeft($key, $maxAttempts)
     {
         $attempts = $this->attempts($key);
+        if ($this->cache->has($key.':lockout')) {
+            return 0;
+        }
 
         return $attempts === 0 ? $maxAttempts : $maxAttempts - $attempts + 1;
     }
