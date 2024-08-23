@@ -13,6 +13,9 @@
             "email": "taylor@laravel.com"
         }
     ],
+    "replace": {
+        "illuminate/cache": "self.version"
+    },
     "require": {
         "php": "^8.0.2",
         "illuminate/collections": "^9.0",
